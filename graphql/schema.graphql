@@ -38,6 +38,14 @@ input CreateProductInput {
     status: Boolean = true
 }
 
+input UpdateProductInput {
+    name: String
+    price: Float
+    stock: Int
+    description: String
+    status: Boolean
+}
+
 type Query {
     user(
         id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
@@ -50,7 +58,11 @@ type Query {
 
     me: User @guard(with: ["sanctum"]) @auth
 
-    products(search: String @where(operator: "like", key: "name")): [Product!]!
+    products(
+        name: String @where(operator: "like")
+        sku: String @where(operator: "like")
+        status: Boolean @eq
+    ): [Product!]!
         @guard(with: ["sanctum"])
         @paginate(defaultCount: 10)
 
@@ -72,4 +84,10 @@ type Mutation {
     createProduct(input: CreateProductInput! @spread): Product!
         @guard(with: ["sanctum"])
         @create
+
+    updateProduct(id: ID! @eq, input: UpdateProductInput! @spread): Product!
+        @guard(with: ["sanctum"])
+        @update
+
+    deleteProduct(id: ID! @eq): Boolean @guard(with: ["sanctum"]) @delete(model: "Product")
 }
