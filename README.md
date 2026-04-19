@@ -1,34 +1,43 @@
-# Laravel GraphQL Admin API
+# Laravel GraphQL E-commerce
 
-Production-ready GraphQL Admin API for E-commerce built with Laravel + Lighthouse + Sanctum.
+Production-ready GraphQL API for modern E-commerce systems built with Laravel, Lighthouse, Sanctum, and MySQL.
+
+> Designed for admin dashboards, mobile apps, storefronts, and headless commerce integrations.
+
+---
 
 ## 🚀 Features
 
-- Admin Authentication
+- GraphQL-first API architecture
+- Admin Authentication with Sanctum
 - Product Management
-- Category Management
-- Brand Management
+- Category & Brand Management
 - Order Management
 - Customer Management
-- Inventory Control
-- Dashboard Analytics
-- Role & Permission
-- GraphQL Pagination / Filtering / Search
+- Inventory Tracking
+- Search / Filtering / Pagination
+- Role-ready scalable structure
+- Clean Laravel codebase
+
+---
 
 ## 🛠 Tech Stack
 
+- PHP 8+
 - Laravel
 - GraphQL
 - Lighthouse
 - Sanctum
-- MySQL
-- PHP 8+
+- MySQL / PostgreSQL
+- PHPUnit
 
-## 📦 Installation
+---
+
+## 📦 Quick Start
 
 ```bash
-git clone https://github.com/zillucse08/laravel-graphql-ecommerce.git
-cd laravel-graphql-admin
+git clone https://github.com/yourusername/laravel-graphql-ecommerce.git
+cd laravel-graphql-ecommerce
 composer install
 cp .env.example .env
 php artisan key:generate
