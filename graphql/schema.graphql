@@ -1,0 +1,75 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    email_verified_at: DateTime
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type AuthPayload {
+    token: String!
+    user: User!
+}
+
+type Product {
+    id: ID!
+    name: String!
+    slug: String!
+    sku: String!
+    price: Float!
+    stock: Int!
+    description: String
+    status: Boolean!
+    created_at: DateTime!
+}
+
+input CreateProductInput {
+    name: String! @rules(apply: ["required"])
+    slug: String! @rules(apply: ["required"])
+    sku: String! @rules(apply: ["required"])
+    price: Float! @rules(apply: ["required"])
+    stock: Int! @rules(apply: ["required"])
+    description: String
+    status: Boolean = true
+}
+
+type Query {
+    user(
+        id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
+        email: String
+            @eq
+            @rules(apply: ["prohibits:id", "required_without:id", "email"])
+    ): User @find
+    users(name: String @where(operator: "like")): [User!]!
+        @paginate(defaultCount: 10)
+
+    me: User @guard(with: ["sanctum"]) @auth
+
+    products(search: String @where(operator: "like", key: "name")): [Product!]!
+        @guard(with: ["sanctum"])
+        @paginate(defaultCount: 10)
+
+    product(id: ID! @eq): Product @guard(with: ["sanctum"]) @find
+}
+
+type Mutation {
+    adminLogin(
+        email: String! @rules(apply: ["required", "email"])
+        password: String! @rules(apply: ["required"])
+    ): AuthPayload!
+        @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@login")
+
+    logout: String
+        @guard(with: ["sanctum"])
+        @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@logout")
+
+    "Product module"
+    createProduct(input: CreateProductInput! @spread): Product!
+        @guard(with: ["sanctum"])
+        @create
+}
